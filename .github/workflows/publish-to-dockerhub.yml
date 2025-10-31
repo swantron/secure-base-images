@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-  release:
-    types: [published]
+    tags:
+      - 'v*'
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME || 'secure-base' }}/secure-base
@@ -22,7 +22,7 @@ jobs:
       - name: Set version
         id: version
         run: |
-          if [[ "${{ github.event_name }}" == "release" ]]; then
+          if [[ "${{ github.ref }}" == refs/tags/* ]]; then
             echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
             echo "IS_RELEASE=true" >> $GITHUB_OUTPUT
           else
