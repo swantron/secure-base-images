@@ -19,6 +19,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
       - name: Set version
         id: version
         run: |
@@ -31,11 +37,14 @@ jobs:
           fi
       
       - name: Build Docker image
-        run: |
-          docker build -t ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }} .
-          if [[ "${{ steps.version.outputs.IS_RELEASE }}" == "true" ]]; then
-            docker tag ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }} ${{ env.IMAGE_NAME }}:latest
-          fi
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          load: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
+            ${{ steps.version.outputs.IS_RELEASE == 'true' && format('{0}:latest', env.IMAGE_NAME) || '' }}
       
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -53,9 +62,14 @@ jobs:
       
       - name: Push image to Docker Hub
         if: success() && steps.version.outputs.IS_RELEASE == 'true'
-        run: |
-          docker push ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
-          docker push ${{ env.IMAGE_NAME }}:latest
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
+            ${{ env.IMAGE_NAME }}:latest
       
       - name: Build summary
         run: |
