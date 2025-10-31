@@ -40,8 +40,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: ${{ steps.version.outputs.IS_RELEASE == 'true' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
-          load: ${{ steps.version.outputs.IS_RELEASE != 'true' }}
+          platforms: linux/amd64
+          load: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
             ${{ steps.version.outputs.IS_RELEASE == 'true' && format('{0}:latest', env.IMAGE_NAME) || '' }}
@@ -60,7 +60,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Push image to Docker Hub
+      - name: Build and push multi-platform image
         if: success() && steps.version.outputs.IS_RELEASE == 'true'
         uses: docker/build-push-action@v5
         with:
