@@ -40,8 +40,8 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
-          load: true
+          platforms: ${{ steps.version.outputs.IS_RELEASE == 'true' && 'linux/amd64,linux/arm64' || 'linux/amd64' }}
+          load: ${{ steps.version.outputs.IS_RELEASE != 'true' }}
           tags: |
             ${{ env.IMAGE_NAME }}:${{ steps.version.outputs.VERSION }}
             ${{ steps.version.outputs.IS_RELEASE == 'true' && format('{0}:latest', env.IMAGE_NAME) || '' }}
