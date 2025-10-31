@@ -2,17 +2,12 @@
 
 ## Reporting a Vulnerability
 
-Email security issues to: [your-email@example.com]
+Email security issues to: [joe@swantroncom]
 
 Include:
 - Description of the vulnerability
 - Steps to reproduce
 - Potential impact
-
-**Response timeline:**
-- 24 hours: Acknowledgment
-- 7 days: Assessment
-- 30 days: Fix (if confirmed)
 
 ## Security Features
 
