@@ -1,0 +1,24 @@
+# Docker
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+dist/
+build/
+target/
+
+# Secrets (never commit!)
+*.pem
+*.key
+.env
+secrets.yml
