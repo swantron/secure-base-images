@@ -16,6 +16,7 @@ ENTRYPOINT ["/app"]
 - Non-root user (uid 65532)
 - Automated Trivy security scanning
 - Build fails on CRITICAL/HIGH vulnerabilities
+- Comprehensive integration tests
 
 ## Setup
 
@@ -30,6 +31,16 @@ ENTRYPOINT ["/app"]
    ```
 
 The workflow automatically builds, scans, and publishes to Docker Hub.
+
+## Testing
+
+Run integration tests locally:
+
+```bash
+./test.sh
+```
+
+Tests verify: non-root user, no shell access, no package manager, CA certificates, minimal size, and read-only filesystem support.
 
 ## License
 
